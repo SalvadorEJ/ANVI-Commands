@@ -1,0 +1,50 @@
+ ************************ Ejecutar Anvi´o ************************ 
+
+conda activate anvio-8
+
+
+*** Reformatear los archivos fasta. Eliminar contigos cortos de menos de 1000 pb:
+
+anvi-script-reformat-fasta OregonGCF.fna\
+                           -o OregonGCF.fa \
+                           -l 1000 \
+                           --simplify-names
+
+
+*** Buscar genes en todos los genomas simplificados  (extensión .fa) de manera automatizada.
+Se ejecutará HMMER. El tiempo estimado es de 40 minutos para 12 genomas. 
+Los archivos resultantes tendrán una extensión .db.
+
+for i in `ls *fa | awk 'BEGIN{FS=".fa"}{print $1}'`
+do
+    anvi-gen-contigs-database -f $i.fa -o $i.db -T 4
+    anvi-run-hmms -c $i.db
+done
+
+*** Mismo comando pero solo para un genoma
+
+anvi-gen-contigs-database -f Rfax.fa \
+                          -o Rfax.db
+*****
+
+Archivo txt para generar la base de datos "external genomes"
+________________________________________________________________
+
+
+name	contigs_db_path
+Rpyridinivorans	Rpyridinivorans.db
+Rgordonia	Rgordonia.db
+RruberMSA14	RruberMSA14.db
+RruberZM15	RruberZM15.db
+RruberP14	RruberP14.db
+RruberC1	RruberC1.db
+RruberChol4	RruberChol4.db
+Raetherivorans	Raetherivorans.db
+Rqingshengii	Rqingshengii.db
+Rerytropolis	Rerytropolis.db
+Rjostii	Rjostii.db
+Pequi	Pequi.db
+Rfascians	Rfascians.db
+Rcorynebacterioides	Rcorynebacterioides.db
+
+
